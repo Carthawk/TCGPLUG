@@ -1,0 +1,13 @@
+{
+  "name": "tcgplug-koppeling",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Zet betaalde TikTok Shop-bestellingen automatisch in de wachtrij van het kluis-dashboard",
+  "type": "module",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "tiktok-live-connector": "2.5.0"
+  }
+}
