@@ -135,13 +135,13 @@ body.present .cracked-hint{display:none}
 .dot{width:10px;height:10px;border-radius:50%;background:var(--live);box-shadow:0 0 10px var(--live);animation:pulse 1.6s infinite}
 @keyframes pulse{50%{opacity:.35}}
 #nowName{font-family:var(--display);font-weight:700;font-size:min(3.2rem,11cqw);margin:.35rem 0 .1rem;overflow-wrap:anywhere;line-height:1.1}
-#nowProduct{color:var(--muted);font-size:1.05rem;min-height:1.4em}
+#nowProduct{color:var(--muted);font-size:1.05rem;min-height:1.4em;white-space:pre-line}
 .now.idle #nowName{color:var(--muted);font-size:1.6rem}
 .queue-head{display:flex;align-items:baseline;justify-content:space-between;margin-top:1.25rem}
 .queue-head h3{font-family:var(--display);font-weight:600;margin:0;font-size:1.1rem}
 .queue-head span{color:var(--muted);font-size:.9rem}
 .list .pos{font-family:var(--display);font-weight:700;color:var(--brass);width:1.8em}
-.list .prod{color:var(--muted);font-size:.9rem;overflow-wrap:anywhere}
+.list .prod{color:var(--muted);font-size:.9rem;overflow-wrap:anywhere;white-space:pre-line}
 #queueList li:not(.empty),.removed-list li:not(.empty){display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:.6rem;row-gap:.1rem;align-items:center}
 #queueList li .pos{grid-row:1 / span 2}
 #queueList li .name,.removed-list li .name{grid-column:2;font-weight:600}
@@ -579,7 +579,7 @@ body.present .list{max-height:none}
     const [W, H] = labelDims(), pad = Math.min(3, H * 0.08), inner = W - pad * 2;
     const fit = (txt, maxH, k) => Math.max(2.2, Math.min(maxH, inner / Math.max(4, txt.length * k)));
     const name = c.name || "", prod = c.product || "";
-    const nSize = fit(name, H * 0.36, 0.62), pSize = Math.max(2.2, Math.min(H * 0.17, inner / Math.max(10, prod.length * 0.5) * 1.8));
+    const nSize = fit(name, H * 0.36, 0.62), pSize = Math.max(2.2, Math.min(H * 0.17, inner / Math.max(10, Math.max(...prod.split("\n").map(x => x.length)) * 0.5) * 1.8));
     const d = new Date(), date = d.toLocaleDateString("nl-NL", {day:"2-digit", month:"2-digit", year:"numeric"});
     const e = s => String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[ch]));
     return '<!DOCTYPE html><html><head><meta charset="utf-8"><style>' +
@@ -587,7 +587,7 @@ body.present .list{max-height:none}
       'html,body{margin:0;padding:0;width:' + W + 'mm;height:' + H + 'mm;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:#000;background:#fff}' +
       '.l{box-sizing:border-box;width:' + W + 'mm;height:' + H + 'mm;padding:' + pad + 'mm;display:flex;flex-direction:column;justify-content:space-between}' +
       '.n{font-weight:700;font-size:' + nSize.toFixed(2) + 'mm;line-height:1.05;white-space:nowrap;overflow:hidden}' +
-      '.p{font-size:' + pSize.toFixed(2) + 'mm;line-height:1.15;max-height:2.4em;overflow:hidden}' +
+      '.p{font-size:' + pSize.toFixed(2) + 'mm;line-height:1.15;flex:1;min-height:0;overflow:hidden;white-space:pre-line;margin:0.6mm 0}' +
       '.m{display:flex;justify-content:space-between;font-size:' + Math.max(1.8, Math.min(2.6, H * 0.08)).toFixed(2) + 'mm;border-top:0.3mm solid #000;padding-top:0.6mm}' +
       '</style></head><body><div class="l"><div class="n">' + e(name) + '</div><div class="p">' + e(prod) + '</div>' +
       '<div class="m"><span>' + e(state.name) + '</span><span>' + date + ' · #' + no + '</span></div></div>' +
@@ -642,7 +642,7 @@ body.present .list{max-height:none}
       const key = Object.keys(state.customers).find(k=>k.toLowerCase()===n.toLowerCase()) || n;
       const prev = state.customers[key] || {count:0};
       state.customers[key] = {count:prev.count+1, last:Date.now(), lastProduct:p || prev.lastProduct || ""};
-      if (p && !state.products.some(x=>x.toLowerCase()===p.toLowerCase())) state.products.push(p);
+      if (p && !p.includes("\n") && !state.products.some(x=>x.toLowerCase()===p.toLowerCase())) state.products.push(p);
       const c = Object.assign({id:uid(), name:key, product:p, fresh:true}, extra || {});
       if (!state.current) state.current = c; else state.queue.push(c);
     });

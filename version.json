@@ -1,10 +1,10 @@
 {
-  "version": "1.0.4",
-  "notes": "Geen schuifbalken meer in beeld",
+  "version": "1.0.6",
+  "notes": "Alleen TikTok-bestellingen in de wachtrij (Whatnot wordt overgeslagen), producten onder elkaar",
   "files": {
-    "server.js": "3a332167e55916d66785be93f4af6fda16a49ba0a2a69067d8e6abd5c9003a28",
-    "public/index.html": "884ed04c07fa423ed7bf5188f1e0e92419573417bbf62f7a19e44570b60370c2",
+    "server.js": "22c4ba0835e1903a2f3ba94a0b264c67396852099dcc665cb805879b6c06c6b7",
+    "public/index.html": "5983fa2d0c4a802f39711eb6560bededa8975234dcfbb47c247576eecdeee9e4",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
-    "LEESMIJ.md": "b5803bd9dccb8ac8a91eac4eab7e13ae181c7638d333686a17f9ee555ced6fb6"
+    "LEESMIJ.md": "3b3ffbca7f649989cd594ea7dc0182a610ccde07ff761da0c94a95bad151de3b"
   }
 }

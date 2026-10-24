@@ -59,6 +59,8 @@ Alle bestellingen komen uit Shopify, ook die van TikTok. In de wachtrij staat pe
 - **Wat er besteld is**, eronder.
 - Een icoontje voor waar de bestelling vandaan komt: 🛒 = via TikTok, 🛍️ = via de webshop.
 
+Standaard komen alleen **TikTok-bestellingen** in de rij: bestellingen via het TikTok-kanaal, of webshop-bestellingen waarbij de klant voor TikTok heeft gekozen. Bestellingen voor **Whatnot** worden overgeslagen; in het zwarte venster zie je welke. Dit kun je op de instellingenpagina veranderen bij *Welke bestellingen in de wachtrij?*
+
 Alleen **betaalde** bestellingen komen in de rij, en elke bestelling maar één keer. Op het label staan dezelfde naam en hetzelfde bestelnummer, handig bij het inpakken.
 
 ## Korte productnamen

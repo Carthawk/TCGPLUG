@@ -115,7 +115,7 @@ function describe(order) {
     const n = shortName([li.product_name, li.sku_name && li.sku_name !== "Default" ? li.sku_name : ""].filter(Boolean).join(" – "));
     counts.set(n, (counts.get(n) || 0) + (Number(li.quantity) || 1));
   }
-  return [...counts].map(([n, q]) => (q > 1 ? `${q}× ` : "") + n).join(", ");
+  return [...counts].map(([n, q]) => (q > 1 ? `${q}× ` : "") + n).join("\n");
 }
 
 function buyerName(order) {
@@ -161,8 +161,22 @@ const ORDERS_Q = `query($q:String!){ orders(first:50, sortKey:CREATED_AT, revers
   customAttributes{ key value }
   customer{ firstName lastName displayName }
   billingAddress{ firstName } shippingAddress{ firstName }
-  lineItems(first:30){ nodes{ title variantTitle quantity } }
+  lineItems(first:30){ nodes{ title variantTitle quantity customAttributes{ key value } } }
 } } }`;
+// Voor welke stream is deze bestelling? Kijkt naar het verkoopkanaal (TikTok Shop) en naar de keuze
+// die de klant in de webshop maakte (Whatnot of TikTok), waar die ook staat: extra velden, productopties, tags of notitie.
+function streamOf(o) {
+  if (isTikTok(o)) return "tiktok";
+  const bits = [];
+  for (const a of o.customAttributes || []) bits.push(a.key + " " + a.value);
+  for (const li of o.lineItems?.nodes || []) { for (const a of li.customAttributes || []) bits.push(a.key + " " + a.value); if (li.variantTitle) bits.push(li.variantTitle); }
+  bits.push(...(o.tags || []), o.note || "");
+  const hay = bits.join(" | ");
+  const tt = /tik ?tok/i.test(hay), wn = /what ?not/i.test(hay);
+  if (tt && !wn) return "tiktok";
+  if (wn && !tt) return "whatnot";
+  return "onbekend";
+}
 function isTikTok(o) {
   const hay = [o.sourceName, o.app?.name, o.channelInformation?.channelDefinition?.channelName, o.channelInformation?.channelDefinition?.handle, ...(o.tags || [])].join(" ");
   return /tik ?tok/i.test(hay);
@@ -173,7 +187,7 @@ function shopifyProducts(o) {
     const n = shortName([li.title, li.variantTitle && li.variantTitle !== "Default Title" ? li.variantTitle : ""].filter(Boolean).join(" – "));
     counts.set(n, (counts.get(n) || 0) + (Number(li.quantity) || 1));
   }
-  return [...counts].map(([n, q]) => (q > 1 ? `${q}\u00d7 ` : "") + n).join(", ") || "Bestelling";
+  return [...counts].map(([n, q]) => (q > 1 ? `${q}\u00d7 ` : "") + n).join("\n") || "Bestelling";
 }
 let shopStarted = new Date(Date.now() - 15 * 60 * 1000).toISOString();
 async function pollShopify() {
@@ -185,6 +199,11 @@ async function pollShopify() {
       if (seen.has(o.id)) continue;
       seen.add(o.id);
       const tt = isTikTok(o);
+      const stream = streamOf(o);
+      if ((config.orderFilter || "tiktok") === "tiktok" && stream !== "tiktok") {
+        log(`Overgeslagen: ${o.name} (${stream === "whatnot" ? "voor Whatnot" : "geen TikTok-keuze gevonden"})`);
+        continue;
+      }
       // Voornaam (als Shopify die meegeeft) + bestelnummer, voor TikTok- en webshop-bestellingen
       const first = String(o.customer?.firstName || o.shippingAddress?.firstName || o.billingAddress?.firstName || "").trim();
       const name = first ? `${first} \u00b7 ${o.name}` : `Bestelling ${o.name}`;
@@ -227,7 +246,7 @@ async function poll() {
 }
 
 // ---------- Live-chat: koppel koper-ID aan TikTok-naam ----------
-let live = null, liveRetry = null, namesDirty = false;
+let live = null, liveRetry = null, namesDirty = false, testCount = 0;
 const chatLog = []; // laatste berichten uit de live-chat, voor als het dashboard later opent
 let chatState = { ok: false, text: "live-chat niet verbonden" };
 function pushChat(item) {
@@ -465,8 +484,8 @@ const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === "/api/test" && req.method === "POST") {
       const id = "TEST-" + Date.now();
-      const tt = Date.now() % 2 === 0;
-      pushOrder({ id, name: (tt ? "Sanne" : "Jan") + " \u00b7 #10" + id.slice(-2), product: "30th Celebration bundel", src: tt ? "tiktok" : "shopify" });
+      const tt = (testCount = (testCount || 0) + 1) % 2 === 1;
+      pushOrder({ id, name: (tt ? "Sanne" : "Jan") + " \u00b7 #10" + id.slice(-2), product: tt ? "30th Celebration bundel" : "30th Celebration bundel\n2\u00d7 Booster pack Ascended Heroes", src: tt ? "tiktok" : "shopify" });
       return json(res, { ok: true });
     }
     if (url.pathname === "/api/print" && req.method === "POST") {
@@ -538,6 +557,13 @@ small{color:#a89b82} code{background:#17140f;padding:.1rem .3rem;border-radius:4
 <small>Heb je nog een oude Shopify-app met een vaste sleutel (begint met <code>shpat_</code>)? Vul die dan hieronder in en laat Client ID en Secret leeg.</small>
 <label>Admin API access token (alleen bij een oude app)</label><input id="shopifyToken" type="password" value="${esc(config.shopifyToken)}">
 
+<label>Welke bestellingen in de wachtrij?</label>
+<select id="orderFilter" style="width:100%;background:#17140f;border:1px solid #3d3322;color:#f4efe4;border-radius:8px;padding:.6rem;font:inherit">
+<option value="tiktok"${(config.orderFilter || "tiktok") === "tiktok" ? " selected" : ""}>Alleen TikTok-bestellingen (Whatnot niet tonen)</option>
+<option value="all"${config.orderFilter === "all" ? " selected" : ""}>Alle betaalde bestellingen</option>
+</select>
+<small>TikTok-bestelling = via het TikTok-kanaal, of in de webshop gekozen voor TikTok.</small>
+
 <h2>2. TikTok live-chat</h2>
 <label>TikTok-gebruikersnaam van de stream (zonder @)</label><input id="tiktokUsername" value="${esc(config.tiktokUsername)}">
 <small>Hiermee leest het programma de live-chat mee.</small>
@@ -572,7 +598,7 @@ const post = (u,b) => fetch(u,{method:'POST',headers:{'content-type':'applicatio
 function saveCfg(){
   const productAliases = {};
   document.getElementById('aliases').value.split('\\n').forEach(l=>{ const i=l.indexOf('='); if(i>0) productAliases[l.slice(0,i).trim()] = l.slice(i+1).trim(); });
-  post('/api/config',{shopifyShop:shopifyShop.value.trim(),shopifyClientId:shopifyClientId.value.trim(),shopifyClientSecret:shopifyClientSecret.value.trim(),shopifyToken:shopifyToken.value.trim(),tiktokUsername:tiktokUsername.value.trim(),productAliases}).then(()=>{ msg('Opgeslagen \u2013 verbinden\u2026'); setTimeout(()=>location.reload(), 6000); });
+  post('/api/config',{orderFilter:orderFilter.value,shopifyShop:shopifyShop.value.trim(),shopifyClientId:shopifyClientId.value.trim(),shopifyClientSecret:shopifyClientSecret.value.trim(),shopifyToken:shopifyToken.value.trim(),tiktokUsername:tiktokUsername.value.trim(),productAliases}).then(()=>{ msg('Opgeslagen \u2013 verbinden\u2026'); setTimeout(()=>location.reload(), 6000); });
 }
 function sendCode(){ post('/api/code',{code:code.value}).then(r=> r.ok ? location.href='/setup?ok=1' : msg('Koppelen mislukt: '+r.error)); }
 </script></body></html>`;
