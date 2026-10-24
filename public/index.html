@@ -196,6 +196,17 @@ body.present .cracked-hint{display:none}
 @keyframes simpress{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 4px var(--live),0 0 24px var(--live);transform:scale(.94)}}
 #toast:not(.on){visibility:hidden;transition:transform .4s,visibility 0s .4s}
 #shopStatus[hidden],#chatBtn[hidden]{display:none}
+/* Geen logo/naam bovenaan: meer ruimte voor de stream */
+.brand{display:none !important}
+header{justify-content:flex-end;padding:.6rem clamp(1rem,3vw,2rem)}
+body{--below-safe:560px}
+body.present{--below-safe:470px}
+body.present header{position:fixed;top:0;right:0;z-index:60;padding:.6rem;opacity:0;transition:opacity .2s}
+body.present header:hover{opacity:1}
+body.present main{padding-top:clamp(1rem,2vw,1.5rem)}
+.safe{cursor:pointer}
+.v-wheel.tap{animation:wheeltap .35s ease}
+@keyframes wheeltap{50%{transform:rotate(-28deg)}}
 /* Geen schuifbalken in beeld (scrollen met muis/toetsen blijft werken) */
 html{scrollbar-width:none}
 html::-webkit-scrollbar{display:none}
@@ -244,7 +255,7 @@ body.present{overflow:hidden}
 .stats{margin-top:1rem !important}
 #toast{display:none !important}
 #vaultTitle{justify-content:center;text-align:center;text-transform:uppercase;letter-spacing:.05em}
-.total-stat{color:var(--brass-hi);font-size:min(2rem,15cqw) !important;white-space:nowrap}
+.total-stat{color:var(--brass-hi);font-size:min(3.4rem,22cqw) !important;white-space:nowrap;line-height:1.05}
 .stat{container-type:inline-size}
 .price-in{display:inline-flex;align-items:center;gap:.3rem;color:var(--text)}
 .price-in input{width:6em;background:#0b0a08;border:1px solid var(--line);border-radius:8px;color:var(--text);padding:.45rem .5rem;font:inherit}
@@ -769,10 +780,12 @@ body.present .list{max-height:none}
   });
 
   // ===== Kluis kraken: 3x op het logo klikken =====
-  const logo = document.querySelector(".brand .logo"), safe = document.querySelector(".safe");
+  const logo = document.querySelector(".safe"), safe = document.querySelector(".safe");
+  const wheelEl = document.querySelector(".v-wheel");
   let taps = 0, tapTimer = null;
   logo.addEventListener("click", () => {
-    logo.classList.remove("tap"); void logo.offsetWidth; logo.classList.add("tap");
+    if (safe.classList.contains("open")) return;
+    wheelEl.classList.remove("tap"); void wheelEl.offsetWidth; wheelEl.classList.add("tap");
     taps++; clearTimeout(tapTimer); tapTimer = setTimeout(()=> taps = 0, 1500);
     if (taps >= 3){ taps = 0; crack(); }
   });

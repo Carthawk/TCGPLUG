@@ -1,10 +1,10 @@
 {
-  "version": "1.0.11",
-  "notes": "Live-chat: reacties ook in het zwarte venster, sticker-reacties, overzicht van live-berichten",
+  "version": "1.0.12",
+  "notes": "Logo bovenaan weg voor meer ruimte, kluis kraken door 3x op de kluis te klikken, groter bedrag onder de kluis",
   "files": {
     "server.js": "5831757e6bf76f3d36869745d1049b3d255bace88e58f045950c32a2737e1d1b",
-    "public/index.html": "c006b816707b343653c8fa6d93d40e38ea69fc5c528a94eac523736d391004eb",
+    "public/index.html": "f7cc42a2a519eef4c1aeea5498dd7a0ddde0b7bf530e99d38baf25ddd6b117df",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
-    "LEESMIJ.md": "eb86584232f7095e3442104e749a8706d7dbd0b096ae847ddbb443e9462877cd"
+    "LEESMIJ.md": "4d84b4d838ae172246c551c0e9cb3f9f56c7d18542f0dbc30cf7975dfed6a7e1"
   }
 }

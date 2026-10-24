@@ -73,6 +73,11 @@ Booster Bundle = 30th Celebration bundel
 Blister = 30th Celebration blister
 ```
 
+## Presentatiemodus en kluis kraken
+
+- In **presentatiemodus** staan alleen de kluis, de wachtrij en de chat in beeld, zonder logo en knoppen. Beweeg de muis naar **rechtsboven** om de knoppen weer te zien (bijv. om presentatiemodus uit te zetten).
+- **RGB Mew gepulld?** Klik **drie keer snel op de kluis** zelf. Het wiel draait, de deur zwaait open en de confetti valt. Klik ergens om te sluiten.
+
 ## Story voor de volgende stream
 
 Klik aan het eind van de stream rechtsboven op **📸 Story**. Kies de dag (bijv. *Morgen*) en de tijd. De tussenstand van de kluis en het aantal packs worden automatisch overgenomen. Klik op **🎬 Video downloaden**: het programma speelt de bewegende story af (ongeveer 11 seconden, laat het venster open) en zet daarna een video van 1080 × 1920 in de map Downloads, klaar om op TikTok te posten. Met **▶ Voorbeeld afspelen** kijk je eerst hoe hij wordt, en met **⬇ Alleen afbeelding** download je een stilstaande versie.
