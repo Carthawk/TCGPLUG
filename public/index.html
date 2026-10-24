@@ -196,6 +196,10 @@ body.present .cracked-hint{display:none}
 @keyframes simpress{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 4px var(--live),0 0 24px var(--live);transform:scale(.94)}}
 #toast:not(.on){visibility:hidden;transition:transform .4s,visibility 0s .4s}
 #shopStatus[hidden],#chatBtn[hidden]{display:none}
+#updSection[hidden]{display:none}
+.upd-set{flex-direction:column;align-items:flex-start !important}
+.upd-set .btn{align-self:flex-start}
+#settingsBtn.has-update::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--brass-hi);box-shadow:0 0 8px var(--brass-hi);margin-left:.3rem}
 /* Geen logo/naam bovenaan: meer ruimte voor de stream */
 .brand{display:none !important}
 header{justify-content:flex-end;padding:.6rem clamp(1rem,3vw,2rem)}
@@ -456,6 +460,13 @@ body.present .list{max-height:none}
 </div>
 <div id="settings" role="dialog" aria-label="Instellingen" hidden>
   <div class="set-head"><strong>Instellingen</strong><button class="icon-btn" id="settingsClose" aria-label="Sluiten">✕</button></div>
+  <div id="updSection" hidden>
+  <h4>Updates</h4>
+  <div class="label-set upd-set">
+    <span id="updText">Zoeken naar updates…</span>
+    <button class="btn" id="updBtn" hidden>Bijwerken</button>
+  </div>
+  </div>
   <h4>Kluis</h4>
   <div class="label-set price-set">
     <label for="packPrice">Waarde per pack</label>
@@ -683,7 +694,34 @@ body.present .list{max-height:none}
   $("lblH").addEventListener("change", e => update(()=> state.label.h = parseInt(e.target.value,10) || 29));
   $("lblTest").onclick = () => printLabel(state.current || {name:"POKECHASENL", product:"2+1 30th kluis"}, true);
   $("lblAgain").onclick = printAgain;
-  const setOpen = open => { $("settings").hidden = !open; $("settingsBtn").setAttribute("aria-expanded", open); };
+  const setOpen = open => { $("settings").hidden = !open; $("settingsBtn").setAttribute("aria-expanded", open); if (open) checkUpdate(); };
+  // ===== Updates vanuit het dashboard (alleen via het programma) =====
+  function checkUpdate(){
+    if (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
+    $("updSection").hidden = false;
+    fetch("/api/update").then(r => r.json()).then(u => {
+      if (u.available){
+        $("updText").innerHTML = "Versie " + esc(u.current) + " \u2013 nieuwe versie <b>" + esc(u.latest) + "</b> beschikbaar" + (u.notes ? "<br><small>" + esc(u.notes) + "</small>" : "");
+        $("updBtn").hidden = false; $("settingsBtn").classList.add("has-update");
+      } else {
+        $("updText").textContent = "Versie " + u.current + (u.error ? " \u2013 " + u.error : " \u2013 dit is de nieuwste versie");
+        $("updBtn").hidden = true; $("settingsBtn").classList.remove("has-update");
+      }
+    }).catch(() => { $("updText").textContent = "Kon niet controleren op updates."; });
+  }
+  $("updBtn").onclick = () => {
+    $("updBtn").disabled = true; $("updText").textContent = "Bijwerken\u2026 even geduld, niets afsluiten.";
+    fetch("/api/update", {method:"POST"}).then(r => r.json()).then(r => {
+      if (!r.ok){ $("updText").textContent = "Bijwerken mislukt: " + r.error; $("updBtn").disabled = false; return; }
+      $("updText").textContent = "Bijgewerkt naar versie " + r.version + ". Het programma start opnieuw\u2026";
+      let tries = 0;
+      const wait = () => setTimeout(() => {
+        fetch("/api/update").then(x => x.json()).then(() => location.reload()).catch(() => { if (++tries < 30) wait(); else location.reload(); });
+      }, 2000);
+      setTimeout(wait, 1500);
+    }).catch(() => { $("updText").textContent = "Bijwerken mislukt. Probeer het opnieuw."; $("updBtn").disabled = false; });
+  };
+  setTimeout(checkUpdate, 2500);
   $("settingsBtn").onclick = () => setOpen($("settings").hidden);
   $("settingsClose").onclick = () => setOpen(false);
   document.addEventListener("click", e => { if (!$("settings").hidden && !e.target.closest("#settings,#settingsBtn")) setOpen(false); });

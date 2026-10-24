@@ -95,7 +95,7 @@ De stand van de kluis (packs, waarde), de wachtrij en de vaste klanten worden bi
 Het programma kan zichzelf bijwerken.
 
 - Bij het opstarten kijkt het of er een nieuwe versie is. Zo ja, dan staat dat in het zwarte venster.
-- Ga naar http://localhost:3000/setup en klik onder **Updates** op **Bijwerken**. Het programma downloadt de nieuwe versie, controleert of alles goed binnen is, maakt een reservekopie van de oude versie (map `reservekopie`) en start daarna vanzelf opnieuw.
+- Klik in het dashboard op **⚙︎ Instellingen**. Staat er een nieuwe versie (er brandt dan een gouden stipje bij Instellingen), klik dan onder **Updates** op **Bijwerken**. Na een paar seconden laadt het dashboard vanzelf opnieuw. (Het kan ook nog via http://localhost:3000/setup.) Het programma downloadt de nieuwe versie, controleert of alles goed binnen is, maakt een reservekopie van de oude versie (map `reservekopie`) en start daarna vanzelf opnieuw.
 - De map `data`, met de instellingen en sleutels, wordt nooit aangeraakt.
 - Bijwerken liever niet midden in een stream doen; het herstarten duurt een paar seconden.
 

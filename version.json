@@ -1,10 +1,10 @@
 {
-  "version": "1.0.16",
-  "notes": "Kluis opent alleen door 5x op het hendelwiel te klikken, groter bedrag in de kluis",
+  "version": "1.0.17",
+  "notes": "Bijwerken kan nu ook in het dashboard onder Instellingen",
   "files": {
     "server.js": "5831757e6bf76f3d36869745d1049b3d255bace88e58f045950c32a2737e1d1b",
-    "public/index.html": "ae356a24ee37dbda03b91023f551171bc2774bdccfecb65359f0c461d6a54f53",
+    "public/index.html": "95594fda69bee5f0c9d1c91b0cdc341c4d3bceed7925bbb07da46e145f0ed8f4",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
-    "LEESMIJ.md": "f2552384603865e2fb81e788fb3b65f49b867d24224e7fd12ab51d7fcc8a511a"
+    "LEESMIJ.md": "4989347c6e3c1443a8336a7488592ea6c6a71c1dcfd84ef8502802104f47bad1"
   }
 }
