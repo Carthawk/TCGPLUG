@@ -346,12 +346,14 @@ function textObject(name, text, size, bold, x, y, w, h, align = "Left") {
 }
 // Label 11352 (54 x 25 mm), liggend. Maten in twips (1440 per inch).
 function labelXml({ name, product, footer }) {
+  // Instelbare verschuiving in millimeters (1 mm = ~56,7 twips), om de afwijking van de printer te corrigeren
+  const dx = Math.round((Number(config.labelShiftX) || 0) * 56.7), dy = Math.round((Number(config.labelShiftY) || 0) * 56.7);
   return `<?xml version="1.0" encoding="utf-8"?><DieCutLabel Version="8.0" Units="twips"><PaperOrientation>Landscape</PaperOrientation>` +
     `<Id>ReturnAddressInt</Id><PaperName>${xmlEsc(config.dymoPaper || "11352 Return Address Int")}</PaperName>` +
     `<DrawCommands><RoundRectangle X="0" Y="0" Width="1440" Height="3060" Rx="90" Ry="90" /></DrawCommands>` +
-    textObject("NAAM", name, 22, true, 110, 70, 2840, 540, "Center") +
-    textObject("PRODUCT", product, 12, false, 110, 610, 2840, 490, "Center") +
-    textObject("ONDER", footer, 6, false, 110, 1120, 2840, 230, "Center") +
+    textObject("NAAM", name, 22, true, 110 + dx, 70 + dy, 2840, 540, "Center") +
+    textObject("PRODUCT", product, 12, false, 110 + dx, 610 + dy, 2840, 490, "Center") +
+    textObject("ONDER", footer, 6, false, 110 + dx, 1120 + dy, 2840, 230, "Center") +
     `</DieCutLabel>`;
 }
 async function printLabel({ name, product, no, shop }) {
@@ -463,7 +465,7 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/api/config" && req.method === "POST") {
       const b = await readBody(req);
       const restartLive = b.tiktokUsername !== undefined && b.tiktokUsername !== config.tiktokUsername;
-      config = { ...config, ...b, tiktokUsername: (b.tiktokUsername ?? config.tiktokUsername).replace(/^@/, "").trim() };
+      config = { ...config, ...b, tiktokUsername: String(b.tiktokUsername ?? config.tiktokUsername ?? "").replace(/^@/, "").trim() };
       writeJSON("config.json", config);
       shopToken = null;
       if (restartLive) startLive();
@@ -574,7 +576,11 @@ small{color:#a89b82} code{background:#17140f;padding:.1rem .3rem;border-radius:4
 <h2>Labelprinter (Dymo)</h2>
 <p>Labels gaan rechtstreeks via DYMO Connect naar de printer. DYMO Connect moet daarvoor geïnstalleerd zijn; het hoeft niet open te staan.</p>
 <div id="dymo">Printers zoeken…</div>
-<button onclick="post('/api/print',{name:'POKECHASENL',product:'2+1 30th kluis',no:'test',shop:'The TCG Plug'}).then(r=>msg(r.ok?'Testlabel verstuurd naar '+r.printer:'Mislukt: '+r.error))">Testlabel printen</button>
+<label>Label verschuiven – horizontaal in mm (min = naar links, plus = naar rechts)</label>
+<input id="labelShiftX" inputmode="decimal" value="${esc(config.labelShiftX ?? 0)}" style="max-width:160px">
+<label>Label verschuiven – verticaal in mm (min = omhoog, plus = omlaag)</label>
+<input id="labelShiftY" inputmode="decimal" value="${esc(config.labelShiftY ?? 0)}" style="max-width:160px">
+<br><button onclick="post('/api/config',{labelShiftX:parseFloat(labelShiftX.value.replace(',','.'))||0,labelShiftY:parseFloat(labelShiftY.value.replace(',','.'))||0}).then(()=>post('/api/print',{name:'Sanne \u00b7 #1064',product:'30th Celebration bundel',no:'test',shop:'The TCG Plug'})).then(r=>msg(r.ok?'Testlabel verstuurd naar '+r.printer:'Mislukt: '+r.error))">Opslaan en testlabel printen</button>
 
 <h2>Updates</h2>
 <p id="upd">Zoeken naar updates\u2026</p>

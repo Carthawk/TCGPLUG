@@ -1,10 +1,10 @@
 {
-  "version": "1.0.7",
-  "notes": "Label netjes gecentreerd, alleen TikTok-bestellingen, producten onder elkaar",
+  "version": "1.0.8",
+  "notes": "Label verschuiven instelbaar om het precies in het midden te krijgen",
   "files": {
-    "server.js": "712f7ebbcfde924ff2e59b876c1d31ff627a42cd9df0b5c9202c8583b502d9da",
+    "server.js": "ea56fd52cc890c1aec5bf1349901f240f2e319b85b063af6514ba1f663f6d1e9",
     "public/index.html": "04cdd6bfb5831cf24e8a8462cad194c970592e6052c9b1ff044d183738c44fa9",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
-    "LEESMIJ.md": "3b3ffbca7f649989cd594ea7dc0182a610ccde07ff761da0c94a95bad151de3b"
+    "LEESMIJ.md": "30ac8c98f22a7342d3cf6fefdaa763e470d293a8d2e3662a92fbbbc9a56d7d6a"
   }
 }

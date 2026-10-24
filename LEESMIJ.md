@@ -49,6 +49,7 @@ Bij het afronden van een klant (*Volgende klant* of *Klant klaar*) print het pro
 - De labels gaan **rechtstreeks via DYMO Connect** naar de Dymo. Er verschijnt geen printvenster en de printer hoeft niet in de printerlijst van Windows te staan. DYMO Connect moet wel geïnstalleerd zijn; openen is niet nodig.
 - Zet in het dashboard bij **⚙︎ Instellingen** het vinkje **Label printen bij afronden** aan.
 - Op de instellingenpagina (http://localhost:3000/setup) zie je onder **Labelprinter (Dymo)** welke Dymo het programma gevonden heeft, en kun je een **testlabel** printen.
+- Staat de tekst niet precies in het midden van het label? Vul op de instellingenpagina bij **Label verschuiven** een paar millimeter in (min = naar links/omhoog, plus = naar rechts/omlaag) en klik op **Opslaan en testlabel printen**. Herhaal tot het goed staat.
 - Lukt printen via DYMO Connect niet, dan valt het dashboard terug op het gewone printvenster van de browser.
 
 ## Namen van kopers
