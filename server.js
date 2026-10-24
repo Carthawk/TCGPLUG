@@ -274,7 +274,17 @@ async function startLive() {
     if (ev) live.on(ev, d => remember(d.user));
   }
   // Live-chat doorsturen naar het dashboard
-  live.on(WebcastEvent.CHAT, d => { if (d?.comment) pushChat({ k: "chat", u: chatName(d.user), id: d.user?.uniqueId || "", text: String(d.comment) }); });
+  live.on(WebcastEvent.CHAT, d => {
+    const text = String(d?.comment ?? d?.content ?? "").trim();
+    log(`\ud83d\udcac ${chatName(d?.user)}: ${text || "(leeg)"}`);
+    if (text) pushChat({ k: "chat", u: chatName(d.user), id: d.user?.uniqueId || "", text });
+  });
+  if (WebcastEvent.EMOTE) live.on(WebcastEvent.EMOTE, d => pushChat({ k: "chat", u: chatName(d?.user), id: d?.user?.uniqueId || "", text: "stuurt een sticker" }));
+  // Overzicht welke soorten berichten TikTok stuurt (om problemen te zien)
+  const typeCount = {};
+  if (ControlEvent.DECODED_DATA) live.on(ControlEvent.DECODED_DATA, (type) => { const k = typeof type === "string" ? type : (type?.type || "onbekend"); typeCount[k] = (typeCount[k] || 0) + 1; });
+  const tc = setInterval(() => { const e = Object.entries(typeCount); if (e.length) { log("Live-berichten afgelopen minuut: " + e.map(([k, v]) => k.replace("Webcast", "") + " " + v).join(", ")); for (const k in typeCount) delete typeCount[k]; } }, 60000);
+  live.on(ControlEvent.DISCONNECTED, () => clearInterval(tc));
   live.on(WebcastEvent.GIFT, d => {
     const type = d?.giftDetails?.giftType, name = d?.giftDetails?.giftName || "een gift";
     if (type === 1 && !d.repeatEnd) return;

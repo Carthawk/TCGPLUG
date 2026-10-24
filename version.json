@@ -1,8 +1,8 @@
 {
-  "version": "1.0.10",
-  "notes": "Bewegende story als video downloaden",
+  "version": "1.0.11",
+  "notes": "Live-chat: reacties ook in het zwarte venster, sticker-reacties, overzicht van live-berichten",
   "files": {
-    "server.js": "ea56fd52cc890c1aec5bf1349901f240f2e319b85b063af6514ba1f663f6d1e9",
+    "server.js": "5831757e6bf76f3d36869745d1049b3d255bace88e58f045950c32a2737e1d1b",
     "public/index.html": "c006b816707b343653c8fa6d93d40e38ea69fc5c528a94eac523736d391004eb",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
     "LEESMIJ.md": "eb86584232f7095e3442104e749a8706d7dbd0b096ae847ddbb443e9462877cd"
