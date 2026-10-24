@@ -73,6 +73,10 @@ Booster Bundle = 30th Celebration bundel
 Blister = 30th Celebration blister
 ```
 
+## Story voor de volgende stream
+
+Klik aan het eind van de stream rechtsboven op **📸 Story**. Kies de dag (bijv. *Morgen*) en de tijd. De tussenstand van de kluis en het aantal packs worden automatisch overgenomen. Klik op **🎬 Video downloaden**: het programma speelt de bewegende story af (ongeveer 11 seconden, laat het venster open) en zet daarna een video van 1080 × 1920 in de map Downloads, klaar om op TikTok te posten. Met **▶ Voorbeeld afspelen** kijk je eerst hoe hij wordt, en met **⬇ Alleen afbeelding** download je een stilstaande versie.
+
 ## Kluisstand altijd bewaard
 
 De stand van de kluis (packs, waarde), de wachtrij en de vaste klanten worden bij elke wijziging opgeslagen in `data/dashboard.json` op de pc.

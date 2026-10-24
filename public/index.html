@@ -228,6 +228,17 @@ body.present{overflow:hidden}
 .safe .v-center small{font-size:1.45cqw !important;color:#e8dcc4}
 .safe #totalValue{font-size:3.5cqw !important;color:#f6d47a}
 #chips{display:none !important}
+#story{position:fixed;inset:0;z-index:70;background:rgba(5,4,3,.8);display:flex;align-items:center;justify-content:center;padding:1rem}
+#story[hidden]{display:none}
+.story-box{background:var(--panel);border:2px solid var(--brass-lo);border-radius:18px;padding:1.2rem 1.4rem;max-width:860px;width:100%;max-height:calc(100vh - 2rem);overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.story-grid{display:grid;grid-template-columns:1fr 300px;gap:1.4rem;margin-top:.8rem;align-items:start}
+.story-form{display:flex;flex-direction:column;gap:.35rem}
+.story-form label{color:var(--muted);font-size:.9rem;margin-top:.5rem}
+.story-form select,.story-form input{background:#0b0a08;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:.6rem .7rem;font:inherit}
+.story-form .btn{margin-top:1rem}
+.story-hint{color:var(--muted);font-size:.85rem;margin:.6rem 0 0}
+#storyCanvas{width:300px;height:533px;border-radius:12px;border:1px solid var(--line);background:#0b0a08}
+@media (max-width:700px){.story-grid{grid-template-columns:1fr}#storyCanvas{margin:0 auto}}
 .win{margin-top:1rem !important;padding:.8rem 1rem .75rem !important;gap:.55rem !important}
 .win .mew{width:clamp(64px,8.5vh,108px) !important}
 .stats{margin-top:1rem !important}
@@ -287,6 +298,7 @@ body.present .list{max-height:none}
   <div class="head-actions">
   <a class="toggle edit-only" id="shopStatus" href="/setup" target="_blank" hidden></a>
   <button class="toggle edit-only" id="chatBtn" aria-expanded="true" aria-controls="chat" hidden>💬 Chat</button>
+  <button class="toggle edit-only" id="storyBtn" title="Maak een story-afbeelding met de tussenstand">📸 Story</button>
   <button class="toggle edit-only" id="settingsBtn" aria-expanded="false" aria-controls="settings" title="Instellingen">⚙︎ Instellingen</button>
   <button class="toggle sim-btn" id="simBtn" hidden>▶ Simulatie</button>
   <button class="toggle" id="presentBtn" aria-pressed="false" title="Verberg de bewerkknoppen voor een strak beeld op stream">Presentatiemodus</button>
@@ -401,6 +413,29 @@ body.present .list{max-height:none}
     <div class="cracked-who" id="crackedWho"></div>
     <div class="cracked-what" id="crackedWhat"></div>
     <div class="cracked-hint">Klik ergens om de kluis te sluiten</div>
+  </div>
+</div>
+<div id="story" role="dialog" aria-modal="true" aria-labelledby="storyTitle" hidden>
+  <div class="story-box">
+    <div class="set-head"><strong id="storyTitle">Story voor de volgende stream</strong><button class="icon-btn" id="storyClose" aria-label="Sluiten">✕</button></div>
+    <div class="story-grid">
+      <div class="story-form">
+        <label for="storyDay">Wanneer</label>
+        <select id="storyDay"><option>Vandaag</option><option>Vanavond</option><option>Morgen</option><option>Maandag</option><option>Dinsdag</option><option>Woensdag</option><option>Donderdag</option><option>Vrijdag</option><option>Zaterdag</option><option>Zondag</option></select>
+        <label for="storyTime">Hoe laat</label>
+        <input id="storyTime" type="time" value="14:00">
+        <label for="storyValue">Tussenstand kluis</label>
+        <input id="storyValue" inputmode="decimal">
+        <label for="storyPacks">Aantal packs</label>
+        <input id="storyPacks" inputmode="numeric">
+        <p class="story-hint">Bedrag en packs komen van de kluis. Je kunt ze hier nog aanpassen.</p>
+        <button class="btn" id="storyVideo">🎬 Video downloaden</button>
+        <button class="btn ghost" id="storyPlay">▶ Voorbeeld afspelen</button>
+        <button class="btn ghost" id="storyDownload">⬇ Alleen afbeelding</button>
+        <p class="story-hint" id="storyStatus" aria-live="polite"></p>
+      </div>
+      <canvas id="storyCanvas" width="1080" height="1920" aria-label="Voorbeeld van de story"></canvas>
+    </div>
   </div>
 </div>
 <div id="settings" role="dialog" aria-label="Instellingen" hidden>
@@ -830,6 +865,199 @@ body.present .list{max-height:none}
     if (parts.length) confRaf = requestAnimationFrame(loop);
     else { confRaf = null; lastT = 0; cx.clearRect(0,0,innerWidth,innerHeight); }
   }
+
+  // ===== Story-afbeelding voor TikTok (1080 x 1920) =====
+  const loadImg = src => new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
+  let storyImgs = null;
+  async function storyImages(){
+    if (storyImgs) return storyImgs;
+    const logo = await loadImg(document.querySelector(".brand .logo").src);
+    const vault = await loadImg(document.querySelector(".v-base").src);
+    const mews = await Promise.all([...document.querySelectorAll(".win .mew")].map(m => loadImg(m.src)));
+    storyImgs = {logo, vault, mews};
+    return storyImgs;
+  }
+  function fitText(ctx, text, maxW, size, weight, family){
+    let s = size; do { ctx.font = weight + " " + s + "px " + family; s -= 2; } while (ctx.measureText(text).width > maxW && s > 20);
+  }
+  const ST_END = 11;
+  const clamp01 = x => Math.max(0, Math.min(1, x));
+  const seg = (t, a, b) => clamp01((t - a) / (b - a));
+  const eOut = x => 1 - Math.pow(1 - x, 3);
+  const eBack = (x, k = 1.6) => { const c = k + 1; return 1 + c * Math.pow(x - 1, 3) + k * Math.pow(x - 1, 2); };
+  function rng(seed){ let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+  let ringImg = null;
+  async function storyAssets(){
+    const im = await storyImages();
+    if (!ringImg) ringImg = await loadImg(document.querySelector(".v-ring").src);
+    im.ring = ringImg; return im;
+  }
+  function drawSmoke(ctx, t, amt, W, H){
+    if (amt <= 0.01) return;
+    const r = rng(41);
+    for (let i = 0; i < 42; i++){
+      const x0 = r() * (W + 100) - 50, y0 = H * 0.65 + r() * H * 0.5, v = 70 + r() * 110, r0 = 140 + r() * 160, gr = 50 + r() * 70;
+      const ph = r() * 6.28, sw = 30 + r() * 70, life = 7 + r() * 5, off = r() * life, warm = r();
+      const age = (t + off) % life, k = age / life;
+      const x = x0 + Math.sin(ph + t * 0.5) * sw, y = y0 - v * age, rad = r0 + gr * age;
+      const a = Math.sin(Math.PI * k) * 0.17 * amt; if (a < 0.004) continue;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, rad);
+      const c = warm < 0.3 ? "120,96,60" : "150,146,140";
+      g.addColorStop(0, "rgba(" + c + "," + a.toFixed(3) + ")"); g.addColorStop(0.55, "rgba(" + c + "," + (a * 0.45).toFixed(3) + ")"); g.addColorStop(1, "rgba(" + c + ",0)");
+      ctx.fillStyle = g; ctx.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+    }
+  }
+  function storyFrame(ctx, im, t, o){
+    const W = 1080, H = 1920;
+    const D = '"Chakra Petch", "Segoe UI", Arial, sans-serif', B = 'Barlow, "Segoe UI", Arial, sans-serif';
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1;
+    const g = ctx.createRadialGradient(W/2, H*0.42, 50, W/2, H*0.45, H*0.75);
+    g.addColorStop(0, "#3a2c12"); g.addColorStop(.5, "#17120a"); g.addColorStop(1, "#0b0a08");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    // gouden gloed achter de rook
+    const glow = eOut(seg(t, 0.6, 2.6)) * (1 - 0.6 * seg(t, 3, 4));
+    if (glow > 0){ const gg = ctx.createRadialGradient(W/2, 860, 10, W/2, 860, 520); gg.addColorStop(0, "rgba(227,171,60," + (0.35 * glow).toFixed(3) + ")"); gg.addColorStop(1, "rgba(227,171,60,0)"); ctx.fillStyle = gg; ctx.fillRect(0, 300, W, 1100); }
+    ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+    // logo springt uit de rook
+    const lp = eBack(seg(t, 2.4, 3.1), 1.8), la = seg(t, 2.4, 2.65);
+    if (im.logo && la > 0){
+      ctx.save(); ctx.globalAlpha = la; ctx.translate(W/2, 330); ctx.scale(0.5 + 0.5 * lp, 0.5 + 0.5 * lp); ctx.rotate((1 - lp) * -0.35);
+      ctx.shadowColor = "rgba(227,180,86,.55)"; ctx.shadowBlur = 40; ctx.beginPath(); ctx.arc(0, 0, 95, 0, Math.PI*2); ctx.fillStyle = "#000"; ctx.fill(); ctx.shadowBlur = 0;
+      ctx.beginPath(); ctx.arc(0, 0, 95, 0, Math.PI*2); ctx.clip(); ctx.drawImage(im.logo, -95, -95, 190, 190); ctx.restore();
+    }
+    // kop
+    const l1 = eOut(seg(t, 3.0, 3.5)), l2 = eOut(seg(t, 3.25, 3.75));
+    const head1 = o.day + " om " + o.time, head2 = "zijn we weer live!";
+    ctx.fillStyle = "#f4efe4";
+    ctx.save(); ctx.globalAlpha = l1; fitText(ctx, head1, 960, 86, "700", D); ctx.fillText(head1, W/2 + (1 - l1) * 40, 535); ctx.restore();
+    ctx.save(); ctx.globalAlpha = l2; fitText(ctx, head2, 960, 86, "700", D); ctx.fillText(head2, W/2 + (1 - l2) * 40, 630); ctx.restore();
+    // kluis valt in beeld
+    const cnt = eOut(seg(t, 5.0, 7.4));
+    const shown = o.value * (0.5 + 0.5 * cnt);
+    if (im.vault){
+      const vw = 860, vh = vw * im.vault.height / im.vault.width, vx = (W - vw)/2, vy0 = 680;
+      const dp = eBack(seg(t, 4.0, 4.65), 1.4), va = seg(t, 4.0, 4.2);
+      const sq = Math.sin(Math.PI * seg(t, 4.5, 4.85));
+      const vy = vy0 - (1 - dp) * 620;
+      if (va > 0){
+        ctx.save(); ctx.globalAlpha = va;
+        ctx.translate(W/2, vy + vh); ctx.scale(1 + 0.035 * sq, 1 - 0.05 * sq); ctx.translate(-W/2, -(vy + vh));
+        ctx.save(); ctx.shadowColor = "rgba(0,0,0,.7)"; ctx.shadowBlur = 50; ctx.shadowOffsetY = 25; ctx.drawImage(im.vault, vx, vy, vw, vh); ctx.restore();
+        if (im.ring){
+          const rw = vw * 0.37108, rx = vx + vw * 0.20985 + rw/2, ry = vy + vh * 0.17495 + rw/2;
+          const ang = (-540 * (1 - eOut(seg(t, 4.3, 7.4)))) * Math.PI / 180;
+          ctx.save(); ctx.translate(rx, ry); ctx.rotate(ang); ctx.drawImage(im.ring, -rw/2, -rw/2, rw, rw); ctx.restore();
+        }
+        const cx = vx + vw*(0.27575 + 0.23928/2), cy = vy + vh*0.27734 + vw*0.23928/2, r = vw*0.23928/2;
+        const cg = ctx.createRadialGradient(cx - r*0.3, cy - r*0.35, 2, cx, cy, r);
+        cg.addColorStop(0, "#2b2722"); cg.addColorStop(1, "#0a0908");
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fillStyle = cg; ctx.fill();
+        ctx.lineWidth = vw*0.007; ctx.strokeStyle = "#d9a63a"; ctx.stroke();
+        ctx.fillStyle = "#e8dcc4"; ctx.font = "500 " + Math.round(vw*0.0145) + "px " + B; ctx.fillText("Totale waarde", cx, cy - r*0.18);
+        ctx.fillStyle = "#f6d47a"; fitText(ctx, fmt.format(shown), r*1.75, Math.round(vw*0.035), "700", D); ctx.fillText(fmt.format(shown), cx, cy + r*0.22);
+        ctx.restore();
+      }
+    }
+    // tussenstand
+    const ta = eOut(seg(t, 5.0, 5.5));
+    ctx.save(); ctx.globalAlpha = ta; ctx.fillStyle = "#c9b892"; ctx.font = "600 40px " + B; ctx.fillText("De tussenstand van de kluis", W/2 + (1 - ta) * 30, 1305); ctx.restore();
+    const pulse = 1 + 0.06 * Math.sin(Math.PI * seg(t, 7.4, 7.9)) + 0.012 * Math.sin(Math.max(0, t - 7.9) * 2.6);
+    ctx.save(); ctx.globalAlpha = eOut(seg(t, 5.1, 5.5)); ctx.translate(W/2, 1400); ctx.scale(pulse, pulse);
+    ctx.fillStyle = "#f6d47a"; ctx.shadowColor = "rgba(246,212,122,.45)"; ctx.shadowBlur = 40;
+    fitText(ctx, fmt.format(shown), 960, 132, "700", D); ctx.fillText(fmt.format(shown), 0, 40); ctx.restore();
+    ctx.save(); ctx.globalAlpha = eOut(seg(t, 6.6, 7.1)); ctx.fillStyle = "#f4efe4"; ctx.font = "600 38px " + B;
+    ctx.fillText(Math.round(o.packs * (cnt < 1 ? 0.5 + 0.5 * cnt : 1)) + " packs 30th Celebration", W/2, 1505); ctx.restore();
+    // Mews vliegen in
+    const mews = im.mews.filter(Boolean);
+    if (mews.length === 3){
+      const h = 150, w = h*0.7, y0 = 1545, cxm = W/2 - 175;
+      [[-9,-60,"255,70,70",7.7],[0,0,"70,220,110",8.0],[9,60,"70,120,255",8.3]].forEach((c, i) => {
+        const k = eBack(seg(t, c[3], c[3] + 0.55), 1.7), a = seg(t, c[3], c[3] + 0.18);
+        if (a <= 0) return;
+        const fly = 1 - Math.min(1, k);
+        ctx.save(); ctx.globalAlpha = a; ctx.translate(cxm + c[1] + fly * [-240, 0, 240][i], y0 + h/2 + (i===1 ? -6 : 0) + fly * 380);
+        ctx.rotate((c[0] + fly * [-30, 0, 30][i]) * Math.PI/180); const sc = 0.7 + 0.3 * k; ctx.scale(sc, sc);
+        ctx.shadowColor = "rgba(" + c[2] + ",.7)"; ctx.shadowBlur = 24; ctx.drawImage(mews[i], -w/2, -h/2, w, h); ctx.restore();
+      });
+      const pa = eOut(seg(t, 8.8, 9.3));
+      ctx.save(); ctx.globalAlpha = pa; ctx.textAlign = "left"; ctx.fillStyle = "#f6d47a"; ctx.font = "700 40px " + D; ctx.fillText("Pull RGB Mew", W/2 - 60 + (1 - pa) * 30, 1610);
+      ctx.fillStyle = "#f4efe4"; ctx.fillText("en win de kluis!", W/2 - 60 + (1 - pa) * 30, 1660); ctx.restore();
+    }
+    // rook erover, trekt weg
+    drawSmoke(ctx, t, 1 - seg(t, 2.6, 4.6), W, H);
+  }
+  function storyOpts(){
+    return { day: $("storyDay").value, time: $("storyTime").value || "14:00",
+      value: parseFloat(String($("storyValue").value).replace(/\./g, "").replace(",", ".")) || 0,
+      packs: parseInt($("storyPacks").value, 10) || 0 };
+  }
+  let storyAnim = null;
+  async function drawStory(t){
+    try { await document.fonts.ready; } catch(e){}
+    const im = await storyAssets();
+    storyFrame($("storyCanvas").getContext("2d"), im, t == null ? ST_END : t, storyOpts());
+  }
+  async function playStory(record){
+    cancelAnimationFrame(storyAnim);
+    try { await document.fonts.ready; } catch(e){}
+    const im = await storyAssets(), cv = $("storyCanvas"), ctx = cv.getContext("2d"), o = storyOpts();
+    let rec = null, chunks = [], type = "";
+    if (record){
+      const types = ["video/mp4;codecs=avc1.640028", "video/mp4", "video/webm;codecs=vp9", "video/webm"];
+      type = types.find(x => window.MediaRecorder && MediaRecorder.isTypeSupported(x)) || "video/webm";
+      rec = new MediaRecorder(cv.captureStream(30), { mimeType: type, videoBitsPerSecond: 10000000 });
+      rec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+      rec.start(250);
+    }
+    return new Promise(done => {
+      const t0 = performance.now();
+      const step = now => {
+        const t = (now - t0) / 1000;
+        storyFrame(ctx, im, Math.min(t, ST_END), o);
+        if (record) $("storyStatus").textContent = "Video maken\u2026 " + Math.min(ST_END, Math.floor(t)) + " / " + ST_END + " s";
+        if (t < ST_END + 0.15) storyAnim = requestAnimationFrame(step);
+        else if (rec){
+          rec.onstop = () => {
+            const ext = type.includes("mp4") ? "mp4" : "webm";
+            const blob = new Blob(chunks, { type: type.split(";")[0] });
+            const a = document.createElement("a"); a.download = "TCG-Plug-story-" + new Date().toISOString().slice(0,10) + "." + ext;
+            a.href = URL.createObjectURL(blob); document.body.appendChild(a); a.click();
+            setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000);
+            $("storyStatus").textContent = "Klaar! De video staat in Downloads (" + ext.toUpperCase() + ").";
+            done();
+          };
+          rec.stop();
+        } else done();
+      };
+      storyAnim = requestAnimationFrame(step);
+    });
+  }
+  function openStory(){
+    $("storyValue").value = (Math.round(state.packs * state.price * 100) / 100).toFixed(2).replace(".", ",");
+    $("storyPacks").value = state.packs;
+    if (state.storyDay) $("storyDay").value = state.storyDay;
+    if (state.storyTime) $("storyTime").value = state.storyTime;
+    $("story").hidden = false; drawStory();
+  }
+  $("storyBtn").onclick = openStory;
+  $("storyClose").onclick = () => $("story").hidden = true;
+  $("story").addEventListener("click", e => { if (e.target === $("story")) $("story").hidden = true; });
+  ["storyDay","storyTime","storyValue","storyPacks"].forEach(id => $(id).addEventListener("input", () => { state.storyDay = $("storyDay").value; state.storyTime = $("storyTime").value; save(); cancelAnimationFrame(storyAnim); drawStory(); }));
+  $("storyPlay").onclick = () => playStory(false);
+  $("storyVideo").onclick = async () => {
+    const btns = ["storyVideo","storyPlay","storyDownload"].map($); btns.forEach(b => b.disabled = true);
+    try { await playStory(true); } catch(e){ $("storyStatus").textContent = "Video maken lukte niet in deze browser. Gebruik Chrome of Edge."; }
+    btns.forEach(b => b.disabled = false);
+  };
+  $("storyDownload").onclick = async () => {
+    cancelAnimationFrame(storyAnim); await drawStory();
+    $("storyCanvas").toBlob(b => {
+      const a = document.createElement("a"); const d = new Date();
+      a.download = "TCG-Plug-story-" + d.toISOString().slice(0,10) + ".png";
+      a.href = URL.createObjectURL(b); document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+    }, "image/png");
+  };
 
   // ===== Simulatie (alleen in het online voorbeeld) =====
   if (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname)){

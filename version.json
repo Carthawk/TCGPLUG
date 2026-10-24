@@ -1,10 +1,10 @@
 {
-  "version": "1.0.8",
-  "notes": "Label verschuiven instelbaar om het precies in het midden te krijgen",
+  "version": "1.0.10",
+  "notes": "Bewegende story als video downloaden",
   "files": {
     "server.js": "ea56fd52cc890c1aec5bf1349901f240f2e319b85b063af6514ba1f663f6d1e9",
-    "public/index.html": "04cdd6bfb5831cf24e8a8462cad194c970592e6052c9b1ff044d183738c44fa9",
+    "public/index.html": "c006b816707b343653c8fa6d93d40e38ea69fc5c528a94eac523736d391004eb",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
-    "LEESMIJ.md": "30ac8c98f22a7342d3cf6fefdaa763e470d293a8d2e3662a92fbbbc9a56d7d6a"
+    "LEESMIJ.md": "eb86584232f7095e3442104e749a8706d7dbd0b096ae847ddbb443e9462877cd"
   }
 }
