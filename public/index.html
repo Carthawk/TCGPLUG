@@ -251,11 +251,14 @@ body.present{overflow:hidden}
 #storyCanvas{width:300px;height:533px;border-radius:12px;border:1px solid var(--line);background:#0b0a08}
 @media (max-width:700px){.story-grid{grid-template-columns:1fr}#storyCanvas{margin:0 auto}}
 .win{margin-top:1rem !important;padding:.8rem 1rem .75rem !important;gap:.55rem !important}
-.win .mew{width:clamp(64px,8.5vh,108px) !important}
+.win .mew{width:clamp(80px,12vh,150px) !important}
+.chat-panel{height:calc(100vh - 78px) !important}
+.win #winText{font-size:clamp(1.4rem,2.3vw,2.3rem) !important}
 .stats{margin-top:1rem !important}
 #toast{display:none !important}
 #vaultTitle{justify-content:center;text-align:center;text-transform:uppercase;letter-spacing:.05em}
 .total-stat{color:var(--brass-hi);font-size:min(3.4rem,22cqw) !important;white-space:nowrap;line-height:1.05}
+#packCount{font-size:min(3.4rem,22cqw) !important;line-height:1.05;color:var(--text)}
 .stat{container-type:inline-size}
 .price-in{display:inline-flex;align-items:center;gap:.3rem;color:var(--text)}
 .price-in input{width:6em;background:#0b0a08;border:1px solid var(--line);border-radius:8px;color:var(--text);padding:.45rem .5rem;font:inherit}
