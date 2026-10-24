@@ -1,9 +1,9 @@
 {
-  "version": "1.0.3",
-  "notes": "Nieuwe gouden kluisdeur met draaiend wiel, rustigere confetti, bewegende Kluis gekraakt-melding, kluisstand op de pc bewaard",
+  "version": "1.0.4",
+  "notes": "Geen schuifbalken meer in beeld",
   "files": {
     "server.js": "3a332167e55916d66785be93f4af6fda16a49ba0a2a69067d8e6abd5c9003a28",
-    "public/index.html": "2c22738e43434c656046a4b452127c60da2d7221573692b6a5de69e42ed58abf",
+    "public/index.html": "884ed04c07fa423ed7bf5188f1e0e92419573417bbf62f7a19e44570b60370c2",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
     "LEESMIJ.md": "b5803bd9dccb8ac8a91eac4eab7e13ae181c7638d333686a17f9ee555ced6fb6"
   }
