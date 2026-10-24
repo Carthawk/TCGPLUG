@@ -233,11 +233,12 @@ body.present{overflow:hidden}
 .v-ring{position:absolute;left:20.985%;top:17.495%;width:37.108%;height:auto;will-change:transform}
 .v-wheel{position:absolute;left:65.323%;top:24.751%;width:27.895%;height:auto;transition:transform 1s cubic-bezier(.45,0,.2,1)}
 .safe.open .v-wheel{transform:rotate(-480deg)}
-.safe .v-center{position:absolute;inset:27.734% auto auto 27.575% !important;width:23.928%;aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2cqw;
+.safe .v-center{position:absolute;inset:25.97% auto auto 26.439% !important;width:26.2%;aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2cqw;
   background:conic-gradient(from 210deg,rgba(255,255,255,.07),rgba(255,255,255,0) 18%,rgba(255,255,255,.06) 35%,rgba(255,255,255,0) 55%,rgba(255,255,255,.08) 72%,rgba(255,255,255,0) 90%),radial-gradient(circle at 40% 35%,#2b2722,#0a0908 72%);
   border:.35cqw solid #d9a63a !important;box-shadow:0 0 0 .5cqw #0b0a08,inset 0 0 2.4cqw rgba(0,0,0,.8) !important}
-.safe .v-center small{font-size:1.45cqw !important;color:#e8dcc4}
-.safe #totalValue{font-size:3.5cqw !important;color:#f6d47a}
+.safe .v-center small{font-size:1.25cqw !important;color:#e8dcc4}
+.safe #totalValue{font-size:4.9cqw !important;color:#f6d47a;white-space:nowrap;line-height:1}
+.safe #totalValue .cents{font-size:.58em;vertical-align:.62em;margin-left:.04em}
 #chips{display:none !important}
 #story{position:fixed;inset:0;z-index:70;background:rgba(5,4,3,.8);display:flex;align-items:center;justify-content:center;padding:1rem}
 #story[hidden]{display:none}
@@ -537,8 +538,14 @@ body.present .list{max-height:none}
   let shown = null, target = 0, raf = null, lastTs = 0;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
   function paintValue(){
-    $("totalValue").textContent = fmt.format(shown);
-    $("totalStat").textContent = fmt.format(shown);
+    const txt = fmt.format(shown), ci = txt.lastIndexOf(",");
+    const tv = $("totalValue");
+    tv.innerHTML = ci > 0 ? esc(txt.slice(0, ci)) + '<span class="cents">' + esc(txt.slice(ci)) + '</span>' : esc(txt);
+    // zo groot mogelijk binnen de draaiknop
+    tv.style.removeProperty("font-size");
+    const box = tv.parentElement, maxW = box.clientWidth * 0.86;
+    if (maxW > 0 && tv.scrollWidth > maxW) tv.style.setProperty("font-size", (parseFloat(getComputedStyle(tv).fontSize) * maxW / tv.scrollWidth) + "px", "important");
+    $("totalStat").textContent = txt;
     const perPack = state.price > 0 ? state.price : 1;
     ring.style.transform = `rotate(${(shown / perPack) * 72}deg)`;
     const vr = document.getElementById("vRing"); if (vr) vr.style.transform = ring.style.transform;
