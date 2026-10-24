@@ -1,10 +1,10 @@
 {
-  "version": "1.0.15",
-  "notes": "Groter bedrag in de kluis, groter Mew-blok, packs-aantal en bedrag, logo bovenaan weg, kraken via de kluis",
+  "version": "1.0.16",
+  "notes": "Kluis opent alleen door 5x op het hendelwiel te klikken, groter bedrag in de kluis",
   "files": {
     "server.js": "5831757e6bf76f3d36869745d1049b3d255bace88e58f045950c32a2737e1d1b",
-    "public/index.html": "0eeab273835c603ed46cc9bd2fc2f454db6034af761ef4c5881a3a8591edd36f",
+    "public/index.html": "ae356a24ee37dbda03b91023f551171bc2774bdccfecb65359f0c461d6a54f53",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
-    "LEESMIJ.md": "4d84b4d838ae172246c551c0e9cb3f9f56c7d18542f0dbc30cf7975dfed6a7e1"
+    "LEESMIJ.md": "f2552384603865e2fb81e788fb3b65f49b867d24224e7fd12ab51d7fcc8a511a"
   }
 }

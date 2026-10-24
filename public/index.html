@@ -204,7 +204,8 @@ body.present{--below-safe:470px}
 body.present header{position:fixed;top:0;right:0;z-index:60;padding:.6rem;opacity:0;transition:opacity .2s}
 body.present header:hover{opacity:1}
 body.present main{padding-top:clamp(1rem,2vw,1.5rem)}
-.safe{cursor:pointer}
+.safe{cursor:default}
+.v-wheel{cursor:pointer}
 .v-wheel.tap{animation:wheeltap .35s ease}
 @keyframes wheeltap{50%{transform:rotate(-28deg)}}
 /* Geen schuifbalken in beeld (scrollen met muis/toetsen blijft werken) */
@@ -790,14 +791,14 @@ body.present .list{max-height:none}
   });
 
   // ===== Kluis kraken: 3x op het logo klikken =====
-  const logo = document.querySelector(".safe"), safe = document.querySelector(".safe");
+  const logo = document.querySelector(".v-wheel"), safe = document.querySelector(".safe");
   const wheelEl = document.querySelector(".v-wheel");
   let taps = 0, tapTimer = null;
   logo.addEventListener("click", () => {
     if (safe.classList.contains("open")) return;
     wheelEl.classList.remove("tap"); void wheelEl.offsetWidth; wheelEl.classList.add("tap");
-    taps++; clearTimeout(tapTimer); tapTimer = setTimeout(()=> taps = 0, 1500);
-    if (taps >= 3){ taps = 0; crack(); }
+    taps++; clearTimeout(tapTimer); tapTimer = setTimeout(()=> taps = 0, 2000);
+    if (taps >= 5){ taps = 0; crack(); }
   });
   logo.addEventListener("dblclick", e => e.preventDefault());
 

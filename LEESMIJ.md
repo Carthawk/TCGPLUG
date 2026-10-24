@@ -76,7 +76,7 @@ Blister = 30th Celebration blister
 ## Presentatiemodus en kluis kraken
 
 - In **presentatiemodus** staan alleen de kluis, de wachtrij en de chat in beeld, zonder logo en knoppen. Beweeg de muis naar **rechtsboven** om de knoppen weer te zien (bijv. om presentatiemodus uit te zetten).
-- **RGB Mew gepulld?** Klik **drie keer snel op de kluis** zelf. Het wiel draait, de deur zwaait open en de confetti valt. Klik ergens om te sluiten.
+- **RGB Mew gepulld?** Klik **vijf keer op het hendelwiel** van de kluis (binnen twee seconden). Het wiel draait, de deur zwaait open en de confetti valt. Klik ergens om te sluiten.
 
 ## Story voor de volgende stream
 
