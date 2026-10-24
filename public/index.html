@@ -586,9 +586,9 @@ body.present .list{max-height:none}
       '@page{size:' + W + 'mm ' + H + 'mm;margin:0}' +
       'html,body{margin:0;padding:0;width:' + W + 'mm;height:' + H + 'mm;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:#000;background:#fff}' +
       '.l{box-sizing:border-box;width:' + W + 'mm;height:' + H + 'mm;padding:' + pad + 'mm;display:flex;flex-direction:column;justify-content:space-between}' +
-      '.n{font-weight:700;font-size:' + nSize.toFixed(2) + 'mm;line-height:1.05;white-space:nowrap;overflow:hidden}' +
-      '.p{font-size:' + pSize.toFixed(2) + 'mm;line-height:1.15;flex:1;min-height:0;overflow:hidden;white-space:pre-line;margin:0.6mm 0}' +
-      '.m{display:flex;justify-content:space-between;font-size:' + Math.max(1.8, Math.min(2.6, H * 0.08)).toFixed(2) + 'mm;border-top:0.3mm solid #000;padding-top:0.6mm}' +
+      '.n{font-weight:700;font-size:' + nSize.toFixed(2) + 'mm;line-height:1.05;white-space:nowrap;overflow:hidden;text-align:center}' +
+      '.p{font-size:' + pSize.toFixed(2) + 'mm;line-height:1.15;flex:1;min-height:0;overflow:hidden;white-space:pre-line;margin:0.6mm 0;text-align:center}' +
+      '.m{display:flex;justify-content:center;gap:2.5mm;font-size:' + Math.max(1.8, Math.min(2.6, H * 0.08)).toFixed(2) + 'mm;border-top:0.3mm solid #000;padding-top:0.6mm}' +
       '</style></head><body><div class="l"><div class="n">' + e(name) + '</div><div class="p">' + e(prod) + '</div>' +
       '<div class="m"><span>' + e(state.name) + '</span><span>' + date + ' · #' + no + '</span></div></div>' +
       '<script>(function(){var n=document.querySelector(".n"),p=document.querySelector(".p"),fs;' +

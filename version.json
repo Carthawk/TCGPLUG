@@ -1,9 +1,9 @@
 {
-  "version": "1.0.6",
-  "notes": "Alleen TikTok-bestellingen in de wachtrij (Whatnot wordt overgeslagen), producten onder elkaar",
+  "version": "1.0.7",
+  "notes": "Label netjes gecentreerd, alleen TikTok-bestellingen, producten onder elkaar",
   "files": {
-    "server.js": "22c4ba0835e1903a2f3ba94a0b264c67396852099dcc665cb805879b6c06c6b7",
-    "public/index.html": "5983fa2d0c4a802f39711eb6560bededa8975234dcfbb47c247576eecdeee9e4",
+    "server.js": "712f7ebbcfde924ff2e59b876c1d31ff627a42cd9df0b5c9202c8583b502d9da",
+    "public/index.html": "04cdd6bfb5831cf24e8a8462cad194c970592e6052c9b1ff044d183738c44fa9",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
     "LEESMIJ.md": "3b3ffbca7f649989cd594ea7dc0182a610ccde07ff761da0c94a95bad151de3b"
   }

@@ -349,9 +349,9 @@ function labelXml({ name, product, footer }) {
   return `<?xml version="1.0" encoding="utf-8"?><DieCutLabel Version="8.0" Units="twips"><PaperOrientation>Landscape</PaperOrientation>` +
     `<Id>ReturnAddressInt</Id><PaperName>${xmlEsc(config.dymoPaper || "11352 Return Address Int")}</PaperName>` +
     `<DrawCommands><RoundRectangle X="0" Y="0" Width="1440" Height="3060" Rx="90" Ry="90" /></DrawCommands>` +
-    textObject("NAAM", name, 20, true, 110, 70, 2840, 520) +
-    textObject("PRODUCT", product, 11, false, 110, 600, 2840, 500) +
-    textObject("ONDER", footer, 6, false, 110, 1120, 2840, 230) +
+    textObject("NAAM", name, 22, true, 110, 70, 2840, 540, "Center") +
+    textObject("PRODUCT", product, 12, false, 110, 610, 2840, 490, "Center") +
+    textObject("ONDER", footer, 6, false, 110, 1120, 2840, 230, "Center") +
     `</DieCutLabel>`;
 }
 async function printLabel({ name, product, no, shop }) {
