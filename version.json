@@ -1,10 +1,10 @@
 {
-  "version": "1.0.0",
-  "notes": "Eerste versie met Shopify, live-chat, Dymo-labels en updates",
+  "version": "1.0.3",
+  "notes": "Nieuwe gouden kluisdeur met draaiend wiel, rustigere confetti, bewegende Kluis gekraakt-melding, kluisstand op de pc bewaard",
   "files": {
-    "server.js": "1e718a70bf8a0950a0d3dbff609e0e93e78dbf07b4c6d730b315986f9373c192",
-    "public/index.html": "e20f049b92b749ae8915d8cec69a5efa45350d88b0c74f806659696565649cf5",
+    "server.js": "3a332167e55916d66785be93f4af6fda16a49ba0a2a69067d8e6abd5c9003a28",
+    "public/index.html": "2c22738e43434c656046a4b452127c60da2d7221573692b6a5de69e42ed58abf",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
-    "LEESMIJ.md": "67c88930bf5ec766b05b76e741b8bad4c4c21be9c57a857e66ee21b7119688b3"
+    "LEESMIJ.md": "b5803bd9dccb8ac8a91eac4eab7e13ae181c7638d333686a17f9ee555ced6fb6"
   }
 }

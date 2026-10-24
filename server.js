@@ -478,6 +478,23 @@ const server = http.createServer(async (req, res) => {
       try { return json(res, { ok: true, printers: await dymoPrinters() }); }
       catch (e) { return json(res, { ok: false, error: e.message }); }
     }
+    if (url.pathname === "/api/state") {
+      if (req.method === "POST") {
+        const b = await readBody(req);
+        if (b && b.state && typeof b.state === "object") {
+          const prev = readJSON("dashboard.json", null);
+          writeJSON("dashboard.json", b.state);
+          // Kluislogboek: elke wijziging van packs of waarde per pack
+          if (!prev || prev.packs !== b.state.packs || prev.price !== b.state.price) {
+            const line = { tijd: new Date().toISOString(), packs: b.state.packs, waardePerPack: b.state.price, totaal: Math.round((b.state.packs || 0) * (b.state.price || 0) * 100) / 100 };
+            fs.appendFile(path.join(DATA, "kluis-logboek.jsonl"), JSON.stringify(line) + "\n", () => {});
+          }
+          broadcast("state", { from: b.from, state: b.state });
+        }
+        return json(res, { ok: true });
+      }
+      return json(res, { state: readJSON("dashboard.json", null) });
+    }
     if (url.pathname === "/api/update") {
       if (req.method === "POST") {
         try { const v = await applyUpdate(); json(res, { ok: true, version: v }); setTimeout(() => process.exit(42), 800); }
