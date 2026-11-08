@@ -69,14 +69,22 @@ Alleen **betaalde** bestellingen komen in de rij, en elke bestelling maar één 
 TikTok-productnamen zijn vaak lang. Op de instellingenpagina kun je per regel een vertaling opgeven, bijvoorbeeld:
 
 ```
-Booster Bundle = 30th Celebration bundel
-Blister = 30th Celebration blister
+Booster Bundle = Ascended Heroes bundle
+Booster Pack = Ascended Heroes pack
 ```
 
 ## Presentatiemodus en kluis kraken
 
 - In **presentatiemodus** staan alleen de kluis, de wachtrij en de chat in beeld, zonder logo en knoppen. Beweeg de muis naar **rechtsboven** om de knoppen weer te zien (bijv. om presentatiemodus uit te zetten).
-- **RGB Mew gepulld?** Klik **vijf keer op het hendelwiel** van de kluis (binnen twee seconden). Het wiel draait, de deur zwaait open en de confetti valt. Klik ergens om te sluiten.
+- **God Pack gepulld?** Klik **vijf keer op het hendelwiel** van de kluis (binnen twee seconden). Het wiel draait, de deur zwaait open en de confetti valt. Klik ergens om te sluiten.
+
+## Kluis-thema (Ascended Heroes · God Pack of 30th Celebration · RGB Mew)
+
+Klik op **⚙︎ Instellingen** en kies bij **Kluis-thema** het thema. Het programma vraagt of je een **nieuwe kluis** wilt starten:
+- **OK**: de kluis begint opnieuw met de standaardstand van dat thema (Ascended Heroes: 200 packs à € 16,99; 30th Celebration: 100 packs à € 18,25).
+- **Annuleren**: alleen het uiterlijk wisselt, de huidige stand blijft staan.
+
+Bij **Aantal packs** en **Waarde per pack** kun je de stand daarna altijd nog precies goed zetten. Titel, kaarten onderaan, de kraak-melding (GOD PACK!) en de story gaan automatisch mee.
 
 ## Story voor de volgende stream
 

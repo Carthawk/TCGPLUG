@@ -1,10 +1,10 @@
 {
-  "version": "1.0.18",
-  "notes": "Testupdate: controleren of het gouden stipje en Bijwerken in het dashboard werken (er verandert niets)",
+  "version": "1.0.24",
+  "notes": "Ascended Heroes-kluis: 200 packs à 16,99 euro; God Pack en kluiswaarde onderin beeld",
   "files": {
-    "server.js": "5831757e6bf76f3d36869745d1049b3d255bace88e58f045950c32a2737e1d1b",
-    "public/index.html": "95594fda69bee5f0c9d1c91b0cdc341c4d3bceed7925bbb07da46e145f0ed8f4",
+    "server.js": "e40ef774298ea914b9c41c9f0c1ac8bdb9876f9f83b886758f434b09f219f8a9",
+    "public/index.html": "2e3adeac88446c4360303fefd616f57d71f4d42fabe736031b6a311725ca8485",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
-    "LEESMIJ.md": "4989347c6e3c1443a8336a7488592ea6c6a71c1dcfd84ef8502802104f47bad1"
+    "LEESMIJ.md": "03b577be0aee9da3bf17e3ebccc7724ef1c1d5ac949455e9f10bbc28c658e504"
   }
 }

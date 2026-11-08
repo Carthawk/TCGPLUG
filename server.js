@@ -497,7 +497,7 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/api/test" && req.method === "POST") {
       const id = "TEST-" + Date.now();
       const tt = (testCount = (testCount || 0) + 1) % 2 === 1;
-      pushOrder({ id, name: (tt ? "Sanne" : "Jan") + " \u00b7 #10" + id.slice(-2), product: tt ? "30th Celebration bundel" : "30th Celebration bundel\n2\u00d7 Booster pack Ascended Heroes", src: tt ? "tiktok" : "shopify" });
+      pushOrder({ id, name: (tt ? "Sanne" : "Jan") + " \u00b7 #10" + id.slice(-2), product: tt ? "Ascended Heroes booster bundle" : "2+1 Ascended Heroes kluis\n2\u00d7 Booster pack Ascended Heroes", src: tt ? "tiktok" : "shopify" });
       return json(res, { ok: true });
     }
     if (url.pathname === "/api/print" && req.method === "POST") {
@@ -580,7 +580,7 @@ small{color:#a89b82} code{background:#17140f;padding:.1rem .3rem;border-radius:4
 <label>TikTok-gebruikersnaam van de stream (zonder @)</label><input id="tiktokUsername" value="${esc(config.tiktokUsername)}">
 <small>Hiermee leest het programma de live-chat mee.</small>
 <label>Korte productnamen (één per regel: <code>stukje van productnaam = korte naam</code>)</label>
-<textarea id="aliases" rows="4" placeholder="Booster Bundle = 30th Celebration bundel">${esc(aliases)}</textarea>
+<textarea id="aliases" rows="4" placeholder="Booster Bundle = Ascended Heroes bundle">${esc(aliases)}</textarea>
 <button onclick="saveCfg()">Opslaan</button>
 
 <h2>Labelprinter (Dymo)</h2>
@@ -590,7 +590,7 @@ small{color:#a89b82} code{background:#17140f;padding:.1rem .3rem;border-radius:4
 <input id="labelShiftX" inputmode="decimal" value="${esc(config.labelShiftX ?? 0)}" style="max-width:160px">
 <label>Label verschuiven – verticaal in mm (min = omhoog, plus = omlaag)</label>
 <input id="labelShiftY" inputmode="decimal" value="${esc(config.labelShiftY ?? 0)}" style="max-width:160px">
-<br><button onclick="post('/api/config',{labelShiftX:parseFloat(labelShiftX.value.replace(',','.'))||0,labelShiftY:parseFloat(labelShiftY.value.replace(',','.'))||0}).then(()=>post('/api/print',{name:'Sanne \u00b7 #1064',product:'30th Celebration bundel',no:'test',shop:'The TCG Plug'})).then(r=>msg(r.ok?'Testlabel verstuurd naar '+r.printer:'Mislukt: '+r.error))">Opslaan en testlabel printen</button>
+<br><button onclick="post('/api/config',{labelShiftX:parseFloat(labelShiftX.value.replace(',','.'))||0,labelShiftY:parseFloat(labelShiftY.value.replace(',','.'))||0}).then(()=>post('/api/print',{name:'Sanne \u00b7 #1064',product:'2+1 Ascended Heroes kluis',no:'test',shop:'The TCG Plug'})).then(r=>msg(r.ok?'Testlabel verstuurd naar '+r.printer:'Mislukt: '+r.error))">Opslaan en testlabel printen</button>
 
 <h2>Updates</h2>
 <p id="upd">Zoeken naar updates\u2026</p>
