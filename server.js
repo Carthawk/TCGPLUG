@@ -40,8 +40,10 @@ function setStatus(ok, text) {
   if (status.ok === ok && status.text === text) return;
   status = { ok, text }; broadcast("status", status); log("Status:", text);
 }
+const kijkers = new Set(); // OBS-strook: kijkt alleen mee, krijgt geen bestellingen
 function pushOrder(order) {
-  if (clients.size) broadcast("order", order); else pending.push(order);
+  const dashboards = [...clients].filter(c => !kijkers.has(c));
+  if (dashboards.length) dashboards.forEach(c => send(c, "order", order)); else pending.push(order);
   log(`🛒 ${order.name} – ${order.product}`);
 }
 
@@ -457,12 +459,16 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   try {
     if (url.pathname === "/" ) return html(res, fs.readFileSync(path.join(DIR, "public", "index.html"), "utf8"));
+    // OBS-strook (alleen kijken): http://localhost:3000/strook
+    if (url.pathname === "/strook" || url.pathname === "/banner") return html(res, fs.readFileSync(path.join(DIR, "public", "strook.html"), "utf8"));
+    if (url.pathname === "/api/crack" && req.method === "POST") { const b = await readBody(req); broadcast("crack", { name: String(b?.name || "") }); return json(res, { ok: true }); }
     if (url.pathname === "/events") {
       res.writeHead(200, { "content-type": "text/event-stream", "cache-control": "no-cache", connection: "keep-alive" });
-      clients.add(res); send(res, "status", status); send(res, "chatstatus", chatState); send(res, "chatlog", chatLog);
-      while (pending.length) send(res, "order", pending.shift());
+      const kijker = url.searchParams.has("kijk");
+      clients.add(res); if (kijker) kijkers.add(res); send(res, "status", status);
+      if (!kijker){ send(res, "chatstatus", chatState); send(res, "chatlog", chatLog); while (pending.length) send(res, "order", pending.shift()); }
       const ping = setInterval(() => res.write(": ping\n\n"), 25000);
-      req.on("close", () => { clearInterval(ping); clients.delete(res); });
+      req.on("close", () => { clearInterval(ping); clients.delete(res); kijkers.delete(res); });
       return;
     }
     if (url.pathname === "/setup") return html(res, setupPage());
@@ -591,6 +597,11 @@ small{color:#a89b82} code{background:#17140f;padding:.1rem .3rem;border-radius:4
 <label>Label verschuiven – verticaal in mm (min = omhoog, plus = omlaag)</label>
 <input id="labelShiftY" inputmode="decimal" value="${esc(config.labelShiftY ?? 0)}" style="max-width:160px">
 <br><button onclick="post('/api/config',{labelShiftX:parseFloat(labelShiftX.value.replace(',','.'))||0,labelShiftY:parseFloat(labelShiftY.value.replace(',','.'))||0}).then(()=>post('/api/print',{name:'Sanne \u00b7 #1064',product:'2+1 Ascended Heroes kluis',no:'test',shop:'The TCG Plug'})).then(r=>msg(r.ok?'Testlabel verstuurd naar '+r.printer:'Mislukt: '+r.error))">Opslaan en testlabel printen</button>
+
+<h2>OBS-strook</h2>
+<p>Een smalle strook met de kluis, wie er aan de beurt is en de God Pack-kaarten, met doorzichtige achtergrond. Voeg in OBS een <b>Browserbron</b> toe met:</p>
+<p><code>http://localhost:${PORT}/strook</code> &nbsp; breedte <b>1080</b>, hoogte <b>130</b></p>
+<p><a href="/strook?test=godpack" target="_blank" style="color:#f6d47a">Strook bekijken (met God Pack-test)</a></p>
 
 <h2>Updates</h2>
 <p id="upd">Zoeken naar updates\u2026</p>

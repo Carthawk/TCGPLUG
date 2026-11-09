@@ -1,10 +1,11 @@
 {
-  "version": "1.0.24",
-  "notes": "Ascended Heroes-kluis: 200 packs à 16,99 euro; God Pack en kluiswaarde onderin beeld",
+  "version": "1.1.0",
+  "notes": "Nieuw: OBS-strook (http://localhost:3000/strook) met kluis, nu aan de beurt en God Pack",
   "files": {
-    "server.js": "e40ef774298ea914b9c41c9f0c1ac8bdb9876f9f83b886758f434b09f219f8a9",
-    "public/index.html": "2e3adeac88446c4360303fefd616f57d71f4d42fabe736031b6a311725ca8485",
+    "server.js": "d0255598cc20a2e4857956a1353fb2e04442b95ee13f8fbf8e0a1c533301a477",
+    "public/index.html": "4ad1bd805b54a7fab10d0f61d7d1447d1b97f328712bb2d119c1833cd99c14e9",
+    "public/strook.html": "1017a0d99e4c9cdd8963fcb392019b96aab4d3dd71f95c94d4cd2796068a4a7f",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
-    "LEESMIJ.md": "03b577be0aee9da3bf17e3ebccc7724ef1c1d5ac949455e9f10bbc28c658e504"
+    "LEESMIJ.md": "6caac1c84222e40ad70d0912bf6f7859fed8ec23b3d3eed03cfe07ffd0d5138d"
   }
 }

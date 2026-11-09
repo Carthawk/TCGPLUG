@@ -86,6 +86,17 @@ Klik op **⚙︎ Instellingen** en kies bij **Kluis-thema** het thema. Het progr
 
 Bij **Aantal packs** en **Waarde per pack** kun je de stand daarna altijd nog precies goed zetten. Titel, kaarten onderaan, de kraak-melding (GOD PACK!) en de story gaan automatisch mee.
 
+## OBS-strook
+
+Een smalle, scherpe strook voor in de stream, met de kluis (bedrag en packs), wie er nu aan de beurt is en de God Pack-kaarten. De achtergrond is doorzichtig, dus de camera blijft eromheen zichtbaar.
+
+1. Open OBS en klik bij **Bronnen** op **+** en kies **Browser**.
+2. Vul bij **URL** in: `http://localhost:3000/strook`
+3. Zet **Breedte** op **1080** en **Hoogte** op **130**. Klik op **OK**.
+4. Sleep de strook naar de gewenste plek, bijvoorbeeld op de naad tussen de twee camera's.
+
+Alles loopt live mee met het dashboard: + en − bij de packs, Volgende klant en het kraken met vijf klikken op het wiel (dan verschijnt **GOD PACK!** met confetti in de strook). Het programma moet daarvoor gewoon aan staan. Bedienen doe je in het dashboard; de strook is alleen om naar te kijken.
+
 ## Story voor de volgende stream
 
 Klik aan het eind van de stream rechtsboven op **📸 Story**. Kies de dag (bijv. *Morgen*) en de tijd. De tussenstand van de kluis en het aantal packs worden automatisch overgenomen. Klik op **🎬 Video downloaden**: het programma speelt de bewegende story af (ongeveer 11 seconden, laat het venster open) en zet daarna een video van 1080 × 1920 in de map Downloads, klaar om op TikTok te posten. Met **▶ Voorbeeld afspelen** kijk je eerst hoe hij wordt, en met **⬇ Alleen afbeelding** download je een stilstaande versie.
