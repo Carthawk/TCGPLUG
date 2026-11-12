@@ -11,8 +11,8 @@ body{font-family:Inter,"Segoe UI",Arial,sans-serif;color:#f4efe4;width:1080px;tr
  box-shadow:0 0 0 1px rgba(255,236,170,.15) inset,0 10px 30px rgba(0,0,0,.55),0 0 34px rgba(227,171,60,.18);overflow:hidden}
 .sep{width:2px;height:76px;background:linear-gradient(180deg,transparent,#8a6420,transparent);margin:0 18px;flex:none}
 .lbl{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#c9b892;font-weight:600}
-.val{font-size:44px;font-weight:800;color:#f6d47a;line-height:1.02;text-shadow:0 0 24px rgba(246,212,122,.4);white-space:nowrap}
-.sub{font-size:16px;color:#e8dcc4;font-weight:600}
+.val{font-size:42px;font-weight:800;color:#f6d47a;line-height:1.02;text-shadow:0 0 24px rgba(246,212,122,.4);white-space:nowrap}
+.sub{font-size:23px;color:#f4efe4;font-weight:800;line-height:1.1;margin-top:2px}
 .now-l{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#46d6c8;font-weight:700;display:flex;align-items:center;gap:8px}
 .now-l::before{content:"";width:10px;height:10px;border-radius:50%;background:#46d6c8;box-shadow:0 0 10px #46d6c8}
 .now-head{display:flex;align-items:center;gap:12px}
@@ -102,9 +102,23 @@ body{font-family:Inter,"Segoe UI",Arial,sans-serif;color:#f4efe4;width:1080px;tr
     crackTimer = setTimeout(() => strip.classList.remove("cracked"), 9000);
   }
   fetch("/api/state").then(r => r.json()).then(j => show(j.state)).catch(()=>{});
-  const es = new EventSource("/events?kijk=1");
-  es.addEventListener("state", e => { try { show(JSON.parse(e.data).state); } catch(err){} });
-  es.addEventListener("crack", e => { try { godPack(JSON.parse(e.data).name); } catch(err){ godPack(""); } });
+  // live-verbinding met het programma (herstelt zichzelf na een herstart)
+  let es = null, versie = null;
+  function connect(){
+    es = new EventSource("/events?kijk=1");
+    es.addEventListener("state", e => { try { show(JSON.parse(e.data).state); } catch(err){} });
+    es.addEventListener("crack", e => { try { godPack(JSON.parse(e.data).name); } catch(err){ godPack(""); } });
+    es.onopen = () => fetch("/api/state").then(r => r.json()).then(j => show(j.state)).catch(()=>{});
+    es.onerror = () => { if (es.readyState === 2){ es.close(); setTimeout(connect, 3000); } };
+  }
+  if (location.protocol !== "file:") connect();
+  // na een update van het programma laadt de strook zichzelf opnieuw
+  function checkVersie(){
+    fetch("/api/versie", {cache:"no-store"}).then(r => r.json()).then(j => {
+      if (versie && j.v && j.v !== versie) location.reload(); else versie = versie || j.v;
+    }).catch(()=>{});
+  }
+  if (location.protocol !== "file:"){ checkVersie(); setInterval(checkVersie, 15000); }
   // voorbeeld zonder programma (bijv. als los bestand geopend)
   if (location.protocol === "file:") show({theme:"ah", packs:200, price:16.99, queue:[{},{},{}], current:{name:"Dennis \u00b7 #1041", product:"2+1 Ascended Heroes kluis"}});
   if (/[?&]test=godpack/.test(location.search)) setTimeout(() => godPack("Dennis \u00b7 #1041"), 600);

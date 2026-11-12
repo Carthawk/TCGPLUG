@@ -1,11 +1,11 @@
 {
-  "version": "1.1.1",
-  "notes": "Strook toont nu ook het aantal wachtenden",
+  "version": "1.1.2",
+  "notes": "Groter pack-aantal in de strook; strook vernieuwt zichzelf na een update",
   "files": {
-    "server.js": "d0255598cc20a2e4857956a1353fb2e04442b95ee13f8fbf8e0a1c533301a477",
+    "server.js": "eb6298fded3bac1e23401f45c7901b8edff2655feccc1ec48b1cc393fc946d0e",
     "public/index.html": "4ad1bd805b54a7fab10d0f61d7d1447d1b97f328712bb2d119c1833cd99c14e9",
-    "public/strook.html": "c6e136df4470478bab0b0b5755ddec1256bdb1c333b1ccca6e16e2a0121aa944",
+    "public/strook.html": "e529f8b2c672752ac343f87fbf90de2fa134f59c928fa76e49f5ace1864fc876",
     "package.json": "d323007699b506e6bdd1357957fd5e418d195e50a9c45f38b8fbe6038ef9670a",
-    "LEESMIJ.md": "6caac1c84222e40ad70d0912bf6f7859fed8ec23b3d3eed03cfe07ffd0d5138d"
+    "LEESMIJ.md": "7230870542143e464828e333e17b9657e499190a31753c1e64441f0bc34fca7a"
   }
 }

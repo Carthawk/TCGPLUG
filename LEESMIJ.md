@@ -95,7 +95,7 @@ Een smalle, scherpe strook voor in de stream, met de kluis (bedrag en packs), wi
 3. Zet **Breedte** op **1080** en **Hoogte** op **130**. Klik op **OK**.
 4. Sleep de strook naar de gewenste plek, bijvoorbeeld op de naad tussen de twee camera's.
 
-Alles loopt live mee met het dashboard: + en − bij de packs, Volgende klant en het kraken met vijf klikken op het wiel (dan verschijnt **GOD PACK!** met confetti in de strook). Het programma moet daarvoor gewoon aan staan. Bedienen doe je in het dashboard; de strook is alleen om naar te kijken.
+Alles loopt live mee met het dashboard: + en − bij de packs, Volgende klant en het kraken met vijf klikken op het wiel (dan verschijnt **GOD PACK!** met confetti in de strook). Het programma moet daarvoor gewoon aan staan. Bedienen doe je in het dashboard; de strook is alleen om naar te kijken. Na een update van het programma laadt de strook zichzelf binnen ongeveer 15 seconden opnieuw; in OBS hoef je dan niets te doen.
 
 ## Story voor de volgende stream
 

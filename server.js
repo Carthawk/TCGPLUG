@@ -461,11 +461,12 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/" ) return html(res, fs.readFileSync(path.join(DIR, "public", "index.html"), "utf8"));
     // OBS-strook (alleen kijken): http://localhost:3000/strook
     if (url.pathname === "/strook" || url.pathname === "/banner") return html(res, fs.readFileSync(path.join(DIR, "public", "strook.html"), "utf8"));
+    if (url.pathname === "/api/versie") return json(res, { v: VERSION });
     if (url.pathname === "/api/crack" && req.method === "POST") { const b = await readBody(req); broadcast("crack", { name: String(b?.name || "") }); return json(res, { ok: true }); }
     if (url.pathname === "/events") {
       res.writeHead(200, { "content-type": "text/event-stream", "cache-control": "no-cache", connection: "keep-alive" });
       const kijker = url.searchParams.has("kijk");
-      clients.add(res); if (kijker) kijkers.add(res); send(res, "status", status);
+      clients.add(res); if (kijker) kijkers.add(res); send(res, "status", status); send(res, "versie", { v: VERSION });
       if (!kijker){ send(res, "chatstatus", chatState); send(res, "chatlog", chatLog); while (pending.length) send(res, "order", pending.shift()); }
       const ping = setInterval(() => res.write(": ping\n\n"), 25000);
       req.on("close", () => { clearInterval(ping); clients.delete(res); kijkers.delete(res); });
